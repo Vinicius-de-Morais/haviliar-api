@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "haviliar-api", "haviliar-api\haviliar-api.csproj", "{11D600D7-D39A-49ED-8715-494A880855B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Havliar.API", "haviliar-api\Havliar.API.csproj", "{11D600D7-D39A-49ED-8715-494A880855B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haviliar.Application", "Haviliar.Application\Haviliar.Application.csproj", "{50FD4EEE-1431-433D-B0C7-E402172A1DCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haviliar.Domain", "Haviliar.Domain\Haviliar.Domain.csproj", "{B911B1A4-6269-47D9-8E9D-7F3378A3C7D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haviliar.Infra", "Haviliar.Infra\Haviliar.Infra.csproj", "{BBE463D8-E3AF-47A3-AE29-3301E21F75FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haviliar.Ioc", "Haviliar.Ioc\Haviliar.Ioc.csproj", "{80F7DB08-FBCF-4928-8B1F-D70B5B9D00B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haviliar.DataTransfer", "Haviliar.DataTransfer\Haviliar.DataTransfer.csproj", "{BF799BAC-566E-4F9F-8C76-784DD8AB1553}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,26 @@ Global
 		{11D600D7-D39A-49ED-8715-494A880855B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11D600D7-D39A-49ED-8715-494A880855B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11D600D7-D39A-49ED-8715-494A880855B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50FD4EEE-1431-433D-B0C7-E402172A1DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50FD4EEE-1431-433D-B0C7-E402172A1DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50FD4EEE-1431-433D-B0C7-E402172A1DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50FD4EEE-1431-433D-B0C7-E402172A1DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B911B1A4-6269-47D9-8E9D-7F3378A3C7D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B911B1A4-6269-47D9-8E9D-7F3378A3C7D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B911B1A4-6269-47D9-8E9D-7F3378A3C7D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B911B1A4-6269-47D9-8E9D-7F3378A3C7D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE463D8-E3AF-47A3-AE29-3301E21F75FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE463D8-E3AF-47A3-AE29-3301E21F75FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE463D8-E3AF-47A3-AE29-3301E21F75FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE463D8-E3AF-47A3-AE29-3301E21F75FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80F7DB08-FBCF-4928-8B1F-D70B5B9D00B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80F7DB08-FBCF-4928-8B1F-D70B5B9D00B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80F7DB08-FBCF-4928-8B1F-D70B5B9D00B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80F7DB08-FBCF-4928-8B1F-D70B5B9D00B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF799BAC-566E-4F9F-8C76-784DD8AB1553}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF799BAC-566E-4F9F-8C76-784DD8AB1553}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF799BAC-566E-4F9F-8C76-784DD8AB1553}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF799BAC-566E-4F9F-8C76-784DD8AB1553}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
