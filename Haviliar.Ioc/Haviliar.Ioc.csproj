@@ -8,8 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageReference Include="Scrutor" Version="4.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haviliar.Application\Haviliar.Application.csproj" />
+    <ProjectReference Include="..\Haviliar.Domain\Haviliar.Domain.csproj" />
+    <ProjectReference Include="..\Haviliar.Infra\Haviliar.Infra.csproj" />
   </ItemGroup>
 
 </Project>
