@@ -1,4 +1,4 @@
-﻿using ClientTrustScore.Ioc.Configurations;
+﻿using Haviliar.Ioc.Configurations;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
