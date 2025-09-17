@@ -8,11 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haviliar.Application\Haviliar.Application.csproj" />
+    <ProjectReference Include="..\Haviliar.DataTransfer\Haviliar.DataTransfer.csproj" />
+    <ProjectReference Include="..\Haviliar.Ioc\Haviliar.Ioc.csproj" />
   </ItemGroup>
 
 </Project>
