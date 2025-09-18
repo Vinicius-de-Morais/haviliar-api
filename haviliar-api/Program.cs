@@ -2,9 +2,9 @@ using Haviliar.Ioc;
 using haviliar_api.Filters;
 using haviliar_api.Handlers;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
-using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using System.Data;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -63,7 +63,7 @@ app.UseExceptionHandler();
 app.Use(async (context, next) =>
 {
     await next();
-    var conn = context.RequestServices.GetService<SqlConnection>();
+    var conn = context.RequestServices.GetService<NpgsqlConnection>();
     if (conn?.State == ConnectionState.Open)
         await conn.CloseAsync();
 });
