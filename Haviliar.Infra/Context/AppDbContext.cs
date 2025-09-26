@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Haviliar.Domain.Users.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Haviliar.Infra.Context
 {
@@ -9,6 +10,7 @@ namespace Haviliar.Infra.Context
 
         }
 
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

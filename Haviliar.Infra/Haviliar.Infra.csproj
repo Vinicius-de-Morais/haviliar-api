@@ -11,6 +11,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haviliar.Domain\Haviliar.Domain.csproj" />
   </ItemGroup>
 
 </Project>
