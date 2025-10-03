@@ -128,7 +128,7 @@ namespace haviliar_api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
         [Produces(MediaTypeNames.Application.Json)]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> UpdateUserAsync([FromRoute][ModelBinder(BinderType = typeof(EncryptedIdModelBinder))] EncryptedInt UserId, [FromBody] UserRegisterRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateUserAsync([FromRoute][ModelBinder(BinderType = typeof(EncryptedIdModelBinder))] EncryptedInt UserId, [FromBody] UserUpdateRequest request, CancellationToken cancellationToken)
         {
             Result<Unit> result = await _userAppService.UpdateUserAsync(UserId, request, cancellationToken);
 
