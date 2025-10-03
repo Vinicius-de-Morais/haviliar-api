@@ -1,4 +1,5 @@
 ﻿using Haviliar.Domain.Shared;
+using Haviliar.Infra.Utils;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Haviliar.Infra.Security;
