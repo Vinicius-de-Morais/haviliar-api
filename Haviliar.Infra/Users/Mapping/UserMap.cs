@@ -40,8 +40,7 @@ namespace Haviliar.Infra.Users.Mapping
                 .IsRequired();
 
             builder.Property(u => u.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("GETDATE()");
+                .IsRequired();
 
             builder.Property(u => u.UpdatedAt);
 
