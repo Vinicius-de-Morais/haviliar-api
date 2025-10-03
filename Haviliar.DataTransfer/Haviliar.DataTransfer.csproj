@@ -8,4 +8,8 @@
 	<NoWarn>1591</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Haviliar.Domain\Haviliar.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
