@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using Haviliar.Domain.Users.Entities;
 using Haviliar.Domain.Users.Repositories;
+using Haviliar.Domain.Users.Repositories.Filters;
+using Haviliar.Domain.Users.Repositories.Projections;
 using Haviliar.Infra.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +38,31 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
 
         return parsed ? idUsuario : null;
 
+    }
+
+    public async Task<IEnumerable<UsersPaginatedProjection>> GetUsersPaginatedAsync(UserFilter userFilter, CancellationToken cancellationToken)
+    {
+        var collation = "Latin1_General_CI_AI";
+
+        var query = _dbSet
+            .AsNoTracking()
+            .Where(u => userFilter.Search == null ||
+            EF.Functions.Collate(u.UserName, collation).Contains(EF.Functions.Collate(userFilter.Search, collation))||
+            u.CreatedAt.ToString().Contains(userFilter.Search));
+
+        userFilter.TotalItems = await query.CountAsync(cancellationToken);
+
+        var paginatedQuery = GetAllPaginated(query, userFilter);
+
+
+        return await paginatedQuery.Select(u => new UsersPaginatedProjection
+        {
+            UserId = u.UserId,
+            UserName = u.UserName,
+            CreatedAt = u.CreatedAt,
+            UpdatedAt = u.UpdatedAt,
+            UserType = u.UserType
+        }).ToListAsync(cancellationToken);
     }
 
     public bool IsUserAuthenticated()

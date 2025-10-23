@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Haviliar.Domain;
+using Haviliar.Domain.Pagination.Entities;
 using Haviliar.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,20 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         _context = context;
         _dbSet = _context.Set<T>();
 
+    }
+
+    public IQueryable<T> Query()
+    {
+        return _dbSet.AsQueryable();
+    }
+
+    protected IQueryable<T> GetAllPaginated(IQueryable<T> query, PaginationFilter paginationFilter)
+    {
+        return query
+            .AsNoTracking()
+            .ApplySorting(paginationFilter)
+            .Skip(paginationFilter.Page * paginationFilter.PerPage)
+            .Take(paginationFilter.PerPage);
     }
 
     public async Task<bool> AlreadyExistAsync(Expression<Func<T, bool>> filtro, CancellationToken cancellationToken)
@@ -42,5 +57,12 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         await _context.SaveChangesAsync(cancellationToken);
 
         return entity;
+    }
+
+    public Task Delete(T entity, CancellationToken cancellationToken = default)
+    {
+        _dbSet.Remove(entity);
+
+        return _context.SaveChangesAsync(cancellationToken);
     }
 }

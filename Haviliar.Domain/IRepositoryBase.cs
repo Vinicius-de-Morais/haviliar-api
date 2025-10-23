@@ -8,4 +8,5 @@ public interface IRepositoryBase<T> where T : class
     Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
     Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default);
     Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task Delete(T entity, CancellationToken cancellationToken = default);
 }
