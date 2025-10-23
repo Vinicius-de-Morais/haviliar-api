@@ -29,7 +29,7 @@ namespace haviliar_api.Controllers
         /// </summary>
         /// <param name="request">Dados do usuário a ser registrado</param>
         /// <param name="cancellationToken"></param>
-        /// <response code="201">Usuário criado com sucesso</response>
+        /// <response code="204">Usuário criado com sucesso</response>
         /// <response code="400">A requisição contém campos inválidos ou em formato incorreto</response>
         /// <response code="409">Documento ou e-mail já utilizado por outro Usuário.</response>
         /// <returns></returns>
@@ -43,7 +43,7 @@ namespace haviliar_api.Controllers
         {
             Result<Unit> result = await _userAppService.RegisterUserAsync(request, cancellationToken);
 
-            return result.Match<IActionResult>(_ => Created(), ex =>
+            return result.Match<IActionResult>(_ => NoContent(), ex =>
             {
                 int statusCode = ex switch
                 {
