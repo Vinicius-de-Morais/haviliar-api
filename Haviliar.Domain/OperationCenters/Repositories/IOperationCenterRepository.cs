@@ -2,6 +2,6 @@
 
 namespace Haviliar.Domain.OperationCenters.Repositories;
 
-public interface IOperationCenter : IRepositoryBase<OperationCenter>
+public interface IOperationCenterRepository : IRepositoryBase<OperationCenter>
 {
 }
