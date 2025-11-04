@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Haviliar.Domain\Haviliar.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Networks\Repositories\" />
-  </ItemGroup>
-
 </Project>
