@@ -25,7 +25,7 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         return usuario;
     }
 
-    public int? GetCurrentUserId(CancellationToken cancellationToken)
+    public int? GetCurrentUserId()
     {
         if (!IsUserAuthenticated())
         {

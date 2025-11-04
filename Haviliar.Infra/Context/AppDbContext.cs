@@ -13,6 +13,7 @@ namespace Haviliar.Infra.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<OperationCenter> OperationCenters { get; set; }
+        public DbSet<UserOperationCenter> UserOperationCenters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

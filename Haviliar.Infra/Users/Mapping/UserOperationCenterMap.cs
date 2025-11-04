@@ -15,7 +15,7 @@ public class UserOperationCenterMap : IEntityTypeConfiguration<UserOperationCent
         builder.HasOne(uoc => uoc.User)
             .WithMany(u => u.UserOperationCenters)
             .HasForeignKey(uoc => uoc.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(uoc => uoc.OperationCenter)
             .WithMany(oc => oc.UserOperationCenters)

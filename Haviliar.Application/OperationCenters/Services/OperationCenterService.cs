@@ -7,6 +7,8 @@ using Haviliar.Domain.OperationCenters.Repositories;
 using Haviliar.Domain.OperationCenters.Repositories.Filters;
 using Haviliar.Domain.OperationCenters.Repositories.Projections;
 using Haviliar.Domain.Pagination.Entities;
+using Haviliar.Domain.Users.Exceptions;
+using Haviliar.Domain.Users.Repositories;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -15,10 +17,16 @@ namespace Haviliar.Application.OperationCenters.Services;
 public class OperationCenterService : IOperationCenterService
 {
     private readonly IOperationCenterRepository _operationCenterRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IUserOperationCenterRepository _userOperationCenterRepository;
 
-    public OperationCenterService(IOperationCenterRepository operationCenterRepository)
+    public OperationCenterService(IOperationCenterRepository operationCenterRepository,
+        IUserRepository userRepository,
+        IUserOperationCenterRepository userOperationCenterRepository)
     {
         _operationCenterRepository = operationCenterRepository;
+        _userRepository = userRepository;
+        _userOperationCenterRepository = userOperationCenterRepository;
     }
 
 
@@ -36,7 +44,12 @@ public class OperationCenterService : IOperationCenterService
 
     public async Task<Result<OperationCenterResponse>> GetOperationCenterByIdAsync(int operationCenterId, CancellationToken cancellationToken)
     {
-        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<OperationCenterResponse>(new UserUnauthorizedException());
+
+        OperationCenter? operationCenter = await _userOperationCenterRepository.GetByAuthUser(operationCenterId, userId!.Value, cancellationToken);
 
         if (operationCenter is null)
             return new Result<OperationCenterResponse>(new OperationCenterNotFoundException());
@@ -53,6 +66,11 @@ public class OperationCenterService : IOperationCenterService
 
     public async Task<Result<PaginationResult<PaginationOperationCenterResponse>>> GetPaginatedAsync(PaginationOperationCenterRequest request, CancellationToken cancellationToken)
     {
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<PaginationResult<PaginationOperationCenterResponse>>(new UserUnauthorizedException());
+
         OperationCenterFilter filter = new OperationCenterFilter
         {
             Search = request.Search,
@@ -62,7 +80,7 @@ public class OperationCenterService : IOperationCenterService
             Order = request.Order
         };
 
-        IEnumerable<OperationCenterPaginatedProjection> operationCenters = await _operationCenterRepository.GetOperationCentersPaginatedAsync(filter, cancellationToken);
+        IEnumerable<OperationCenterPaginatedProjection> operationCenters = await _userOperationCenterRepository.GetOperationCentersPaginatedAsync(filter, userId.Value, cancellationToken);
 
         List<PaginationOperationCenterResponse> operationCenterResponses = operationCenters.Select(op => new PaginationOperationCenterResponse
         {
