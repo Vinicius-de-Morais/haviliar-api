@@ -34,7 +34,12 @@ public class OperationCenterService : IOperationCenterService
 
     public async Task<Result<Unit>> DeleteOperationCenterAsync(int operationCenterId, CancellationToken cancellationToken)
     {
-        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<Unit>(new UserUnauthorizedException());
+
+        OperationCenter? operationCenter = await _userOperationCenterRepository.GetByAuthUser(operationCenterId, userId.Value, cancellationToken);
 
         if (operationCenter is null)
             return new Result<Unit>(new OperationCenterNotFoundException());
@@ -152,7 +157,12 @@ public class OperationCenterService : IOperationCenterService
 
     public async Task<Result<Unit>> UpdateOperationCenterAsync(int operationCenterId, OperationCenterUpsertRequest request, CancellationToken cancellationToken)
     {
-        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<Unit>(new UserUnauthorizedException());
+
+        OperationCenter? operationCenter = await _userOperationCenterRepository.GetByAuthUser(operationCenterId, userId.Value, cancellationToken);
 
         if (operationCenter is null)
         {

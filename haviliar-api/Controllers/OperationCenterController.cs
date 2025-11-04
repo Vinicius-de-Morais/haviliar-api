@@ -10,11 +10,15 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Haviliar.Application.OperationCenters.Services.Interfaces;
 using Haviliar.Domain.OperationCenters.Exceptions;
+using Haviliar.Domain.Users.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace haviliar_api.Controllers;
 
 [ApiController]
 [Route("api/operation-center")]
+[Authorize]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
 public class OperationCenterController : ControllerBase
 {
     private readonly IOperationCenterService _operationCenterService;
@@ -61,6 +65,7 @@ public class OperationCenterController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <response code="200">Lista dos centro de operações encontrados</response>
     /// <response code="400">A requisição contém campos inválidos ou em formato incorreto</response>
+    /// <response code="401">Usuário não possui permissão para realizar esta ação.</response>
     /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(typeof(PaginationResult<PaginationOperationCenterResponse>), StatusCodes.Status200OK)]
@@ -75,6 +80,7 @@ public class OperationCenterController : ControllerBase
             int statusCode = ex switch
             {
                 OperationCenterNotFoundException => StatusCodes.Status404NotFound,
+                UserUnauthorizedException => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status400BadRequest,
             };
             return Problem(ex.Message, statusCode: statusCode);
@@ -88,6 +94,7 @@ public class OperationCenterController : ControllerBase
     /// <param name="operationCenterId">Id do centro de operações criptografado</param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">Centro de operações retornado com sucesso</response>
+    /// <response code="401">Usuário não possui permissão para realizar esta ação.</response>
     /// <response code="404">Centro de operações não encontrado</response>
     /// <returns></returns>
     [HttpGet("{operationCenterId}")]
@@ -102,6 +109,7 @@ public class OperationCenterController : ControllerBase
         {
             int statusCode = ex switch
             {
+                UserUnauthorizedException => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status404NotFound,
             };
             return Problem(ex.Message, statusCode: statusCode);
@@ -116,6 +124,7 @@ public class OperationCenterController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <response code="204">Centro de operações editado com sucesso</response>
     /// <response code="400">A requisição contém campos inválidos ou em formato incorreto</response>
+    /// <response code="401">Usuário não possui permissão para realizar esta ação.</response>
     /// <response code="404">Centro de operações não encontrado</response>
     /// <response code="409">Nome já utilizado por outro centro de operações.</response>
     /// <returns></returns>
@@ -135,6 +144,7 @@ public class OperationCenterController : ControllerBase
             int statusCode = ex switch
             {
                 OperationCenterNotFoundException => StatusCodes.Status404NotFound,
+                UserUnauthorizedException => StatusCodes.Status401Unauthorized,
                 OperationCenterNameAlreadyExistsException => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status400BadRequest,
             };
@@ -148,6 +158,7 @@ public class OperationCenterController : ControllerBase
     /// <param name="operationCenterId">Id do centro de operações criptografado</param>
     /// <param name="cancellationToken"></param>
     /// <response code="204">Centro de operações excluido com sucesso</response>
+    /// <response code="401">Usuário não possui permissão para realizar esta ação.</response>
     /// <response code="404">Centro de operações não encontrado</response>
     /// <returns></returns>
     [HttpDelete("{operationCenterId}")]
@@ -164,6 +175,7 @@ public class OperationCenterController : ControllerBase
             int statusCode = ex switch
             {
                 OperationCenterNotFoundException => StatusCodes.Status404NotFound,
+                UserUnauthorizedException => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status400BadRequest,
             };
             return Problem(ex.Message, statusCode: statusCode);
@@ -179,6 +191,7 @@ public class OperationCenterController : ControllerBase
     /// <response code="204">Associação realizada com sucesso.</response>
     /// <response code="404">Centro de operações não encontrado.</response>
     /// <response code="400">Erro de validação ou IDs inválidos.</response>
+    /// <response code="401">Usuário não possui permissão para realizar esta ação.</response>
     /// <returns></returns>
     [HttpPut("{operationCenterId}/users")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -197,6 +210,7 @@ public class OperationCenterController : ControllerBase
             int statusCode = ex switch
             {
                 OperationCenterNotFoundException => StatusCodes.Status404NotFound,
+                UserUnauthorizedException => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status400BadRequest,
             };
             return Problem(ex.Message, statusCode: statusCode);
