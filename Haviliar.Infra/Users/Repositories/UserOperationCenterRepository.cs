@@ -6,6 +6,7 @@ using Haviliar.Domain.Users.Enums;
 using Haviliar.Domain.Users.Repositories;
 using Haviliar.Infra.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Haviliar.Infra.Users.Repositories;
 
@@ -13,6 +14,13 @@ public class UserOperationCenterRepository : RepositoryBase<UserOperationCenter>
 {
     public UserOperationCenterRepository(AppDbContext context) : base(context)
     {
+    }
+
+    public async Task<IEnumerable<UserOperationCenter>> GetAllAsync(
+    Expression<Func<UserOperationCenter, bool>> predicate,
+    CancellationToken cancellationToken = default)
+    {
+        return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task<OperationCenter?> GetByAuthUser(int operationCenterId, int userId, CancellationToken cancellationToken)

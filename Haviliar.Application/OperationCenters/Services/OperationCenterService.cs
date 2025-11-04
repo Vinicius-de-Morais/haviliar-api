@@ -7,6 +7,7 @@ using Haviliar.Domain.OperationCenters.Repositories;
 using Haviliar.Domain.OperationCenters.Repositories.Filters;
 using Haviliar.Domain.OperationCenters.Repositories.Projections;
 using Haviliar.Domain.Pagination.Entities;
+using Haviliar.Domain.Users.Entities;
 using Haviliar.Domain.Users.Exceptions;
 using Haviliar.Domain.Users.Repositories;
 using LanguageExt;
@@ -54,7 +55,7 @@ public class OperationCenterService : IOperationCenterService
         if (operationCenter is null)
             return new Result<OperationCenterResponse>(new OperationCenterNotFoundException());
 
-        OperationCenterResponse response = new OperationCenterResponse 
+        OperationCenterResponse response = new OperationCenterResponse
         {
             Name = operationCenter.Name,
             OperationCenterId = operationCenter.OperationCenterId,
@@ -95,9 +96,44 @@ public class OperationCenterService : IOperationCenterService
         return new Result<PaginationResult<PaginationOperationCenterResponse>>(operationCentersPaginated);
     }
 
+    public async Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<int> usersIds, CancellationToken cancellationToken)
+    {
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<Unit>(new UserUnauthorizedException());
+
+        OperationCenter? operationCenter = await _userOperationCenterRepository.GetByAuthUser(operationCenterId, userId.Value, cancellationToken);
+
+        if (operationCenter is null)
+            return new Result<Unit>(new OperationCenterNotFoundException());
+
+        var existingLinks = await _userOperationCenterRepository.GetAllAsync(uoc => uoc.OperationCenterId == operationCenterId &&
+                        usersIds.Contains(uoc.UserId), cancellationToken);
+
+        var existingUserIds = existingLinks.Select(x => x.UserId).ToHashSet();
+
+        var newUserIds = usersIds.Where(id => !existingUserIds.Contains(id)).ToList();
+
+        if (newUserIds.Count == 0)
+            return Unit.Default;
+
+        var newLinks = newUserIds.Select(uid => new UserOperationCenter
+        {
+            UserId = uid,
+            OperationCenterId = operationCenterId
+        }).ToList();
+
+        await _userOperationCenterRepository.InsertManyAsync(newLinks, cancellationToken);
+
+        return Unit.Default;
+
+
+    }
+
     public async Task<Result<Unit>> RegisterOperationCenterAsync(OperationCenterUpsertRequest request, CancellationToken cancellationToken)
     {
-        if(await _operationCenterRepository.AlreadyExistAsync(oc => oc.Name.ToLower() == request.Name.ToLower(), cancellationToken))
+        if (await _operationCenterRepository.AlreadyExistAsync(oc => oc.Name.ToLower() == request.Name.ToLower(), cancellationToken))
         {
             return new Result<Unit>(new OperationCenterNameAlreadyExistsException());
         }

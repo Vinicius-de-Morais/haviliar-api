@@ -169,4 +169,37 @@ public class OperationCenterController : ControllerBase
             return Problem(ex.Message, statusCode: statusCode);
         });
     }
+
+    /// <summary>
+    /// Vincula uma lista de usuários a um centro de operações.
+    /// </summary>
+    /// <param name="operationCenterId">Id do centro de operações criptografado.</param>
+    /// <param name="usersIds">Lista de Ids criptografados dos usuários a serem vinculados.</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="204">Associação realizada com sucesso.</response>
+    /// <response code="404">Centro de operações não encontrado.</response>
+    /// <response code="400">Erro de validação ou IDs inválidos.</response>
+    /// <returns></returns>
+    [HttpPut("{operationCenterId}/users")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [Produces(MediaTypeNames.Application.Json)]
+    public async Task<IActionResult> LinkUsersToOperationCenterAsync(
+     [FromRoute][ModelBinder(BinderType = typeof(EncryptedIdModelBinder))] EncryptedInt operationCenterId,
+     [FromBody][ModelBinder(BinderType = typeof(EncryptedIdModelBinder))] List<EncryptedInt> usersIds,
+     CancellationToken cancellationToken)
+    {
+        Result<Unit> result = await _operationCenterService.LinkUsersAsync(operationCenterId, usersIds, cancellationToken);
+
+        return result.Match<IActionResult>(_ => NoContent(), ex =>
+        {
+            int statusCode = ex switch
+            {
+                OperationCenterNotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status400BadRequest,
+            };
+            return Problem(ex.Message, statusCode: statusCode);
+        });
+    }
 }

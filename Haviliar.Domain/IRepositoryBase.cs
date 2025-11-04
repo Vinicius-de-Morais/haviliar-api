@@ -7,6 +7,7 @@ public interface IRepositoryBase<T> where T : class
     Task<bool> AlreadyExistAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
     Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
     Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default);
+    Task InsertManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
     Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
     Task Delete(T entity, CancellationToken cancellationToken = default);
 }

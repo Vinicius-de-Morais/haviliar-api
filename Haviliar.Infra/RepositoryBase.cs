@@ -65,4 +65,11 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
 
         return _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task InsertManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
+
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

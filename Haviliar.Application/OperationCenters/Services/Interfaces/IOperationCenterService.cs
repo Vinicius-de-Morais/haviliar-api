@@ -13,5 +13,6 @@ public interface IOperationCenterService
     Task<Result<Unit>> UpdateOperationCenterAsync(int operationCenterId, OperationCenterUpsertRequest request, CancellationToken cancellationToken);
     Task<Result<Unit>> DeleteOperationCenterAsync(int operationCenterId, CancellationToken cancellationToken);
     Task<Result<OperationCenterResponse>> GetOperationCenterByIdAsync(int operationCenterId, CancellationToken cancellationToken);
+    Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<int> usersIds, CancellationToken cancellationToken);
 
 }
