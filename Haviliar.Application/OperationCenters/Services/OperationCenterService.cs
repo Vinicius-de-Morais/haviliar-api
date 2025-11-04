@@ -1,7 +1,119 @@
 ﻿using Haviliar.Application.OperationCenters.Services.Interfaces;
+using Haviliar.DataTransfer.OperationCenters.Requests;
+using Haviliar.DataTransfer.OperationCenters.Responses;
+using Haviliar.Domain.OperationCenters.Entities;
+using Haviliar.Domain.OperationCenters.Exceptions;
+using Haviliar.Domain.OperationCenters.Repositories;
+using Haviliar.Domain.OperationCenters.Repositories.Filters;
+using Haviliar.Domain.OperationCenters.Repositories.Projections;
+using Haviliar.Domain.Pagination.Entities;
+using LanguageExt;
+using LanguageExt.Common;
 
 namespace Haviliar.Application.OperationCenters.Services;
 
 public class OperationCenterService : IOperationCenterService
 {
+    private readonly IOperationCenterRepository _operationCenterRepository;
+
+    public OperationCenterService(IOperationCenterRepository operationCenterRepository)
+    {
+        _operationCenterRepository = operationCenterRepository;
+    }
+
+
+    public async Task<Result<Unit>> DeleteOperationCenterAsync(int operationCenterId, CancellationToken cancellationToken)
+    {
+        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+
+        if (operationCenter is null)
+            return new Result<Unit>(new OperationCenterNotFoundException());
+
+        await _operationCenterRepository.Delete(operationCenter, cancellationToken);
+
+        return Unit.Default;
+    }
+
+    public async Task<Result<OperationCenterResponse>> GetOperationCenterByIdAsync(int operationCenterId, CancellationToken cancellationToken)
+    {
+        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+
+        if (operationCenter is null)
+            return new Result<OperationCenterResponse>(new OperationCenterNotFoundException());
+
+        OperationCenterResponse response = new OperationCenterResponse 
+        {
+            Name = operationCenter.Name,
+            OperationCenterId = operationCenter.OperationCenterId,
+            IsActive = operationCenter.IsActive
+        };
+
+        return response;
+    }
+
+    public async Task<Result<PaginationResult<PaginationOperationCenterResponse>>> GetPaginatedAsync(PaginationOperationCenterRequest request, CancellationToken cancellationToken)
+    {
+        OperationCenterFilter filter = new OperationCenterFilter
+        {
+            Search = request.Search,
+            PerPage = request.PerPage,
+            Page = request.Page,
+            Sort = request.Sort,
+            Order = request.Order
+        };
+
+        IEnumerable<OperationCenterPaginatedProjection> operationCenters = await _operationCenterRepository.GetOperationCentersPaginatedAsync(filter, cancellationToken);
+
+        List<PaginationOperationCenterResponse> operationCenterResponses = operationCenters.Select(op => new PaginationOperationCenterResponse
+        {
+            OperationCenterId = op.OperationCenterId,
+            Name = op.Name,
+            IsActive = op.IsActive
+        }).ToList();
+
+        PaginationResult<PaginationOperationCenterResponse> operationCentersPaginated = new(
+            operationCenterResponses, new PaginationResultParams(filter.TotalItems, filter.Page, filter.PerPage));
+
+        return new Result<PaginationResult<PaginationOperationCenterResponse>>(operationCentersPaginated);
+    }
+
+    public async Task<Result<Unit>> RegisterOperationCenterAsync(OperationCenterUpsertRequest request, CancellationToken cancellationToken)
+    {
+        if(await _operationCenterRepository.AlreadyExistAsync(oc => oc.Name.ToLower() == request.Name.ToLower(), cancellationToken))
+        {
+            return new Result<Unit>(new OperationCenterNameAlreadyExistsException());
+        }
+
+        OperationCenter operationCenter = new OperationCenter
+        {
+            Name = request.Name,
+            IsActive = true
+        };
+
+        await _operationCenterRepository.InsertAsync(operationCenter, cancellationToken);
+
+        return Unit.Default;
+    }
+
+    public async Task<Result<Unit>> UpdateOperationCenterAsync(int operationCenterId, OperationCenterUpsertRequest request, CancellationToken cancellationToken)
+    {
+        OperationCenter? operationCenter = await _operationCenterRepository.GetByIdAsync(operationCenterId);
+
+        if (operationCenter is null)
+        {
+            return new Result<Unit>(new OperationCenterNotFoundException());
+        }
+
+        if (await _operationCenterRepository.AlreadyExistAsync(oc => oc.Name.ToLower() == request.Name.ToLower() && oc.OperationCenterId != operationCenterId, cancellationToken))
+        {
+            return new Result<Unit>(new OperationCenterNameAlreadyExistsException());
+        }
+
+        operationCenter.Name = request.Name;
+        operationCenter.IsActive = request.IsActive ?? false;
+
+        await _operationCenterRepository.UpdateAsync(operationCenter, cancellationToken);
+
+        return Unit.Default;
+    }
 }

@@ -102,8 +102,7 @@ public class OperationCenterController : ControllerBase
         {
             int statusCode = ex switch
             {
-                OperationCenterNotFoundException => StatusCodes.Status404NotFound,
-                _ => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status404NotFound,
             };
             return Problem(ex.Message, statusCode: statusCode);
         });
