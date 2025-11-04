@@ -1,6 +1,7 @@
 ﻿using Haviliar.DataTransfer.OperationCenters.Requests;
 using Haviliar.DataTransfer.OperationCenters.Responses;
 using Haviliar.Domain.Pagination.Entities;
+using Haviliar.Infra.Utils;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -13,6 +14,6 @@ public interface IOperationCenterService
     Task<Result<Unit>> UpdateOperationCenterAsync(int operationCenterId, OperationCenterUpsertRequest request, CancellationToken cancellationToken);
     Task<Result<Unit>> DeleteOperationCenterAsync(int operationCenterId, CancellationToken cancellationToken);
     Task<Result<OperationCenterResponse>> GetOperationCenterByIdAsync(int operationCenterId, CancellationToken cancellationToken);
-    Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<int> usersIds, CancellationToken cancellationToken);
+    Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<EncryptedInt> usersIds, CancellationToken cancellationToken);
 
 }

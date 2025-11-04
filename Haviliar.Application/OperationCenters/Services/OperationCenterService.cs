@@ -10,6 +10,7 @@ using Haviliar.Domain.Pagination.Entities;
 using Haviliar.Domain.Users.Entities;
 using Haviliar.Domain.Users.Exceptions;
 using Haviliar.Domain.Users.Repositories;
+using Haviliar.Infra.Utils;
 using LanguageExt;
 using LanguageExt.Common;
 
@@ -96,7 +97,7 @@ public class OperationCenterService : IOperationCenterService
         return new Result<PaginationResult<PaginationOperationCenterResponse>>(operationCentersPaginated);
     }
 
-    public async Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<int> usersIds, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> LinkUsersAsync(int operationCenterId, List<EncryptedInt> usersIds, CancellationToken cancellationToken)
     {
         int? userId = _userRepository.GetCurrentUserId();
 
