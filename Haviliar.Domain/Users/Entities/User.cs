@@ -15,4 +15,7 @@ public class User
     public required DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public required UserTypeEnum UserType { get; set; }
+
+    public virtual ICollection<UserOperationCenter> UserOperationCenters { get; set; } = new List<UserOperationCenter>();
+
 }
