@@ -15,4 +15,9 @@
     <ProjectReference Include="..\Haviliar.Infra\Haviliar.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Networks\Validators\" />
+    <Folder Include="OperationCenters\Validators\" />
+  </ItemGroup>
+
 </Project>
