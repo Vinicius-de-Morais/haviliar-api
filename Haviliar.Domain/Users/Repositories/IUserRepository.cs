@@ -7,5 +7,6 @@ namespace Haviliar.Domain.Users.Repositories;
 public interface IUserRepository : IRepositoryBase<User>
 {
     Task<IEnumerable<UsersPaginatedProjection>> GetUsersPaginatedAsync(UserFilter userFilter, CancellationToken cancellationToken);
+    Task<User?> GetByUserNameAsync(string username, CancellationToken cancellationToken);
     int? GetCurrentUserId();
 }

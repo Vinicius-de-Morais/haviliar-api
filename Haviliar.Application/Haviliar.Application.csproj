@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
   </ItemGroup>
 
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Auth\Validators\" />
     <Folder Include="Networks\Validators\" />
     <Folder Include="OperationCenters\Validators\" />
   </ItemGroup>

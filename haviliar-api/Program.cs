@@ -2,6 +2,7 @@ using Haviliar.Ioc;
 using haviliar_api.Filters;
 using haviliar_api.Handlers;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -53,6 +54,29 @@ builder.Services.AddSwaggerGen(opt =>
     {
         opt.IncludeXmlComments(dataTransferXmlPath);
     }
+
+    opt.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Exemplo: 'Bearer ' + token'",
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT"
+        });
+
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            }, new List<string>()
+        }
+    });
 });
 
 
@@ -77,6 +101,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

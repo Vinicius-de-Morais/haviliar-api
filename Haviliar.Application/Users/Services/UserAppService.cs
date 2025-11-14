@@ -1,4 +1,6 @@
-﻿using Haviliar.Application.Users.Services.Interfaces;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Haviliar.Application.Users.Services.Interfaces;
 using Haviliar.DataTransfer.Users.Requests;
 using Haviliar.DataTransfer.Users.Responses;
 using Haviliar.Domain.Pagination.Entities;
@@ -100,7 +102,7 @@ public class UserAppService(IUserRepository userRepository) : IUserAppService
         User newUser = new User
         {
             UserName = userRegister.UserName,
-            Password = userRegister.Password,
+            Password = HashPassword(userRegister.Password),
             Email = userRegister.Email,
             Document = userRegister.Document,
             Address = $"{userRegister.UserAddressRequest.Street}, {userRegister.UserAddressRequest.Number}, {userRegister.UserAddressRequest.Neighborhood}, {userRegister.UserAddressRequest.City}, {userRegister.UserAddressRequest.State}, {userRegister.UserAddressRequest.ZipCode}" + (userRegister.UserAddressRequest.Complement != null ? $", {userRegister.UserAddressRequest.Complement}" : string.Empty),
@@ -146,5 +148,18 @@ public class UserAppService(IUserRepository userRepository) : IUserAppService
         user.UserType = userUpdate.UserType;
 
         return Unit.Default;
+    }
+
+    private string HashPassword(string password)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+            byte[] sha256Hash = sha256.ComputeHash(passwordBytes);
+
+            string preHashed = Convert.ToBase64String(sha256Hash);
+
+            return BCrypt.Net.BCrypt.HashPassword(preHashed);
+        }
     }
 }
