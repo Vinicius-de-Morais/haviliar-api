@@ -19,7 +19,7 @@ public static class Ioc
     public static string DbConnectionString { get; set; } = string.Empty;
 
     public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
-    {
+     {
 
         JwtSettings jwtSettings = new JwtSettings();
 
@@ -30,6 +30,16 @@ public static class Ioc
             options.Issuer = jwtSettings.Issuer;
             options.Audience = jwtSettings.Audience;
             options.Key = jwtSettings.Key;
+        });
+
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
         });
 
         services
