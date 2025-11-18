@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.0.0" />
+    <PackageReference Include="MQTTnet" Version="5.0.1.1416" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 

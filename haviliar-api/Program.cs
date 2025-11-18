@@ -1,8 +1,9 @@
 using Haviliar.Ioc;
 using haviliar_api.Filters;
 using haviliar_api.Handlers;
-using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
-using Microsoft.Extensions.Options;
+using haviliar_api.MQTT;
+using haviliar_api.WebsocketHub;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -17,6 +18,8 @@ Ioc.RegisterServices(builder.Services, builder.Configuration);
 builder.Services.AddFluentValidationRulesToSwagger();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<MqttService>();
 
 builder.Services.AddControllers(opts =>
 {
@@ -99,10 +102,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(corsConfig => corsConfig
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<DevicesHub>("/hubs/devices");
 
 app.MapControllers();
 
