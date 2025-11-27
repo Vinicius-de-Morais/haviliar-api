@@ -19,8 +19,8 @@ builder.Services.AddFluentValidationRulesToSwagger();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddSignalR();
-builder.Services.AddHostedService<MqttService>();
-builder.Services.AddScoped<MqttService>();
+builder.Services.AddSingleton<MqttService>();
+builder.Services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<MqttService>());
 
 builder.Services.AddControllers(opts =>
 {
