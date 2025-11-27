@@ -3,7 +3,7 @@ using haviliar_api.Filters;
 using haviliar_api.Handlers;
 using haviliar_api.MQTT;
 using haviliar_api.WebsocketHub;
-using MicroElements.Swashbuckle.FluentValidation.AspNetCore
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -20,6 +20,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<MqttService>();
+builder.Services.AddScoped<MqttService>();
 
 builder.Services.AddControllers(opts =>
 {
