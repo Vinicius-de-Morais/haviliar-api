@@ -28,7 +28,7 @@ public class DevicesController : ControllerBase
         var topic = "esp32/open";
 
 
-        await _mqttService.PublishAsync(topic, "open");
+        await _mqttService.PublishAsync(topic, "0");
 
         return Ok(new
         {

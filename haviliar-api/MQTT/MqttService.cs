@@ -11,7 +11,7 @@ namespace haviliar_api.MQTT;
 public class MqttService : IHostedService
 {
     private IMqttClient _mqttClient;
-    private readonly string _broker = "localhost";
+    private readonly string _broker = "10.156.205.199";
     private readonly int _port = 1883;
     private readonly string _clientId = $"api-haviliar";
     private readonly IHubContext<DevicesHub> _hubContext;
