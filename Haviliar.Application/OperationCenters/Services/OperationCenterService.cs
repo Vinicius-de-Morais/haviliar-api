@@ -139,6 +139,11 @@ public class OperationCenterService : IOperationCenterService
 
     public async Task<Result<Unit>> RegisterOperationCenterAsync(OperationCenterUpsertRequest request, CancellationToken cancellationToken)
     {
+        int? userId = _userRepository.GetCurrentUserId();
+
+        if (userId is null)
+            return new Result<Unit>(new UserUnauthorizedException());
+
         if (await _operationCenterRepository.AlreadyExistAsync(oc => oc.Name.ToLower() == request.Name.ToLower(), cancellationToken))
         {
             return new Result<Unit>(new OperationCenterNameAlreadyExistsException());
@@ -150,7 +155,15 @@ public class OperationCenterService : IOperationCenterService
             IsActive = true
         };
 
-        await _operationCenterRepository.InsertAsync(operationCenter, cancellationToken);
+        OperationCenter operation = await _operationCenterRepository.InsertAsync(operationCenter, cancellationToken);
+
+        UserOperationCenter userOperationCenter = new()
+        {
+            UserId = userId.Value,
+            OperationCenterId = operation.OperationCenterId
+        };
+
+        await _userOperationCenterRepository.InsertAsync(userOperationCenter, cancellationToken);
 
         return Unit.Default;
     }
